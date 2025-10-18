@@ -10,7 +10,9 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage",
+    "format:check": "prettier --check . ",
+    "format": "prettier --write . "
   },
   "dependencies": {
     "@workspace/ui": "workspace:*",

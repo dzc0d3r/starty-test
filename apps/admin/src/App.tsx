@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import "@workspace/ui/globals.css"
-import { Button } from "@workspace/ui/components/button"
+import { useState } from "react";
+import "@workspace/ui/globals.css";
+import { Button } from "@workspace/ui/components/button";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
       <h1>Vite + React</h1>
-       
+
       <Button variant="destructive">Button</Button>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -19,7 +19,7 @@ function App() {
         </p>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
