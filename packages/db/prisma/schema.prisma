@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+  output = "./generated/client"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER  
+  ADMIN
+}
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime? @map("email_verified")
+  hashedPassword String?   @map("hashed_password") 
+  image          String?
+  role           Role      @default(USER)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  accounts Account[] // For OAuth providers like Google, GitHub
+  sessions Session[] // For tracking user sessions
+
+  @@map("users") 
+}
+
+// Model for OAuth accounts, allowing users to sign in with third-party providers.
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refreshToken      String? @db.Text @map("refresh_token")
+  accessToken       String? @db.Text @map("access_token")
+  expiresAt         Int?    @map("expires_at")
+  tokenType         String? @map("token_type")
+  scope             String?
+  idToken           String? @db.Text @map("id_token")
+  sessionState      String? @map("session_state")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId]) // Ensures a user can only link one account per provider.
+  @@map("accounts")
+}
+
+// Model for managing user sessions, essential for JWT refresh token strategy.
+model Session {
+  id                 String   @id @default(cuid())
+  userId             String   @map("user_id")
+  hashedRefreshToken String?  @unique @map("hashed_refresh_token") 
+  userAgent          String?  @map("user_agent")
+  ipAddress          String?  @map("ip_address")
+  expiresAt          DateTime @map("expires_at")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+
+model ManagementCompany {
+  id          String   @id @default(cuid()) 
+  name        String   @unique
+  description String?  @db.Text 
+  logoUrl     String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // One-to-Many Relation: A company can manage multiple SCPIs.
+  scpis SCPI[]
+
+  @@map("management_companies")
+}
+
+model SCPI {
+  id               String   @id @default(cuid())
+  name             String
+  type             String   // e.g., "Rendement", "Fiscale"
+  capitalization   Float
+  distributionRate Float?   @map("distribution_rate")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  // Many-to-One Relation: Each SCPI must belong to exactly one ManagementCompany.
+  managementCompany   ManagementCompany @relation(fields: [managementCompanyId], references: [id], onDelete: Cascade)
+  managementCompanyId String @map("management_company_id") 
+  @@map("scpis")
+}

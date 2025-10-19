@@ -13,6 +13,7 @@
     "format": "prettier --write . "
   },
   "dependencies": {
+    "db": "workspace:*",
     "express": "^5.1.0"
   },
   "devDependencies": {
