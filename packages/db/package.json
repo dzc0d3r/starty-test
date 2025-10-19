@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc --build",
     "db:generate": "prisma generate",
-    "db:migrate": "docker-compose up -d --build db && prisma migrate dev",
+    "db:migrate": "docker-compose up -d --build --no-recreate db && prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:up": "docker-compose up -d --build --wait db ",
+    "db:up": "docker-compose up -d --build db",
     "db:down": "docker-compose stop db",
     "postinstall": "prisma generate"
   },

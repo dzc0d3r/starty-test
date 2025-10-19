@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: SCPI Management API
+  version: "1.0.0"
+  description: API for managing SCPIs and their management companies.
+  contact:
+    name: Walid
+
+servers:
+  - url: /api/v1
+    description: Development Server
+
+tags:
+  - name: Companies
+    description: Operations related to management companies
+
+paths:
+  /companies:
+    get:
+      tags:
+        - Companies
+      summary: Retrieve a list of all management companies
+      description: Fetches a JSON array of all management companies from the database.
+      responses:
+        "200":
+          description: A list of companies.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompanyResponse'
+        "500":
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Companies
+      summary: Create a new management company
+      description: Adds a new management company to the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyInput'
+      responses:
+        "201":
+          description: Company created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyResponse'
+        "400":
+          description: Bad Request - Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        "409":
+          description: Conflict - A company with this name already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+
+components:
+  schemas:
+    # --- Request Schemas ---
+    CreateCompanyInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: 'New Company Name'
+        description:
+          type: string
+          example: 'A brief description of the company.'
+        logoUrl:
+          type: string
+          format: uri
+          example: 'https://example.com/logo.png'
+
+    # --- Response Schemas ---
+    CompanyResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'clw8d9j0k0000z89a7b6c5d4e'
+        name:
+          type: string
+          example: 'Corum AM'
+        description:
+          type: string
+          nullable: true
+        logoUrl:
+          type: string
+          format: uri
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    # --- Error Schemas ---
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: 'error'
+        message:
+          type: string
+          example: 'An unexpected error occurred.'
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: 'error'
+        message:
+          type: string
+          example: 'Invalid request data'
+        errors:
+          type: object
+          properties:
+            name:
+              type: array
+              items:
+                type: string
+              example: ["String must contain at least 3 character(s)"]
