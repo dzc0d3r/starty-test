@@ -1,10 +1,13 @@
 {
-  "extends": "./base.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "target": "es2020",
-    "outDir": "dist"
+    "target": "ES2016",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
   },
-  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

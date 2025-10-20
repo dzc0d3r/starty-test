@@ -3,13 +3,6 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import { z } from "zod";
 
-// Recreate __dirname in ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load .env from project root (one level up from src/)
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
-
 const configSchema = z.object({
   NODE_ENV: z
     .enum(["development", "production", "test"])

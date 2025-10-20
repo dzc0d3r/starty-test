@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --build && pnpm db:generate",
     "db:generate": "prisma generate",
     "db:migrate": "docker-compose up -d --build --no-recreate db && prisma migrate dev",
     "db:studio": "prisma studio",
@@ -30,6 +30,6 @@
     "seed": "tsx prisma/seed.ts"
   },
   "exports": {
-    ".": "./src/index.ts"
+    "./client": "./dist/index.js"
   }
 }
