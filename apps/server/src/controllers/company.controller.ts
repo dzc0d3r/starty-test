@@ -1,7 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import * as CompanyService from '../services/company.service';
-import { CreateCompanyInput } from '../validations/company.schema';
-
+import { NextFunction, Request, Response } from "express";
+import * as CompanyService from "../services/company.service";
+import { CreateCompanyInput } from "../validations/company.schema";
 
 /*
  *  GET ('/companies')
@@ -9,7 +8,7 @@ import { CreateCompanyInput } from '../validations/company.schema';
 export const getAllCompaniesHandler = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const companies = await CompanyService.getAllCompanies();
@@ -19,14 +18,13 @@ export const getAllCompaniesHandler = async (
   }
 };
 
-
 /**
  *   POST ("/companies")
  * */
 export const createCompanyHandler = async (
   req: Request<{}, {}, CreateCompanyInput>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const newCompany = await CompanyService.createCompany(req.body);

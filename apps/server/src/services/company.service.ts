@@ -1,6 +1,6 @@
-import { prisma } from 'db';
-import { AppError } from '../utils/AppError';
-import { CreateCompanyInput } from '../validations/company.schema'; // We will create this soon
+import { prisma } from "db";
+import { AppError } from "../utils/AppError";
+import { CreateCompanyInput } from "../validations/company.schema"; // We will create this soon
 
 export const getAllCompanies = async () => {
   return await prisma.managementCompany.findMany();
@@ -12,7 +12,10 @@ export const createCompany = async (input: CreateCompanyInput) => {
   });
 
   if (existingCompany) {
-    throw new AppError(409, 'A management company with this name already exists.');
+    throw new AppError(
+      409,
+      "A management company with this name already exists.",
+    );
   }
 
   return await prisma.managementCompany.create({

@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import companyRoutes from './companies.routes';
+import { Router } from "express";
+import companyRoutes from "./companies.routes";
 
 const router = Router();
 
-router.use('/companies', companyRoutes);
+router.use("/companies", companyRoutes);
 
 export default router;

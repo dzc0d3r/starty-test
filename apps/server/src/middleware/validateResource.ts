@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { AnyZodObject, ZodError } from 'zod';
-import { AppError } from '../utils/AppError';
+import { NextFunction, Request, Response } from "express";
+import { AnyZodObject, ZodError } from "zod";
+import { AppError } from "../utils/AppError";
 
 export const validate =
   (schema: AnyZodObject) =>
@@ -15,7 +15,7 @@ export const validate =
     } catch (error) {
       if (error instanceof ZodError) {
         const formattedErrors = error.flatten().fieldErrors;
-        const errorMessage = 'Invalid request data';
+        const errorMessage = "Invalid request data";
 
         console.error(errorMessage, formattedErrors);
 
@@ -28,4 +28,4 @@ export const validate =
       }
       next(error);
     }
-};
+  };

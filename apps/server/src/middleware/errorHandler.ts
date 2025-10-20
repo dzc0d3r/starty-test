@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { AppError } from '../utils/AppError';
-import { logger } from '../utils/logger';
+import { NextFunction, Request, Response } from "express";
+import { AppError } from "../utils/AppError";
+import { logger } from "../utils/logger";
 
 export const errorHandler = (
   err: Error,
@@ -10,21 +10,21 @@ export const errorHandler = (
 ) => {
   if (err instanceof AppError) {
     logger.error(`[${err.statusCode}] - ${err.message}`);
-    let message: object|string;
+    let message: object | string;
     try {
       message = JSON.parse(err.message);
     } catch (e) {
       message = err.message;
     }
     return res.status(err.statusCode).json({
-      status: 'error',
+      status: "error",
       message: err.message,
     });
   }
 
   logger.error(err);
   return res.status(500).json({
-    status: 'error',
-    ... (typeof message === 'object' ? message : { message }),
+    status: "error",
+    ...(typeof message === "object" ? message : { message }),
   });
 };

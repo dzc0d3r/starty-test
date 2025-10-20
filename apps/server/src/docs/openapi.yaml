@@ -20,7 +20,8 @@ paths:
       tags:
         - Companies
       summary: Retrieve a list of all management companies
-      description: Fetches a JSON array of all management companies from the database.
+      description:
+        Fetches a JSON array of all management companies from the database.
       responses:
         "200":
           description: A list of companies.
@@ -29,7 +30,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CompanyResponse'
+                  $ref: "#/components/schemas/CompanyResponse"
         "500":
           description: Internal Server Error
 
@@ -43,26 +44,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCompanyInput'
+              $ref: "#/components/schemas/CreateCompanyInput"
       responses:
         "201":
           description: Company created successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CompanyResponse'
+                $ref: "#/components/schemas/CompanyResponse"
         "400":
           description: Bad Request - Invalid input data.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
+                $ref: "#/components/schemas/ValidationErrorResponse"
         "409":
           description: Conflict - A company with this name already exists.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Internal Server Error
 
@@ -76,14 +77,14 @@ components:
       properties:
         name:
           type: string
-          example: 'New Company Name'
+          example: "New Company Name"
         description:
           type: string
-          example: 'A brief description of the company.'
+          example: "A brief description of the company."
         logoUrl:
           type: string
           format: uri
-          example: 'https://example.com/logo.png'
+          example: "https://example.com/logo.png"
 
     # --- Response Schemas ---
     CompanyResponse:
@@ -91,10 +92,10 @@ components:
       properties:
         id:
           type: string
-          example: 'clw8d9j0k0000z89a7b6c5d4e'
+          example: "clw8d9j0k0000z89a7b6c5d4e"
         name:
           type: string
-          example: 'Corum AM'
+          example: "Corum AM"
         description:
           type: string
           nullable: true
@@ -115,20 +116,20 @@ components:
       properties:
         status:
           type: string
-          example: 'error'
+          example: "error"
         message:
           type: string
-          example: 'An unexpected error occurred.'
+          example: "An unexpected error occurred."
 
     ValidationErrorResponse:
       type: object
       properties:
         status:
           type: string
-          example: 'error'
+          example: "error"
         message:
           type: string
-          example: 'Invalid request data'
+          example: "Invalid request data"
         errors:
           type: object
           properties:
