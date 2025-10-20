@@ -12,7 +12,18 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 // swagger-ui
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    swaggerOptions: {
+      docExpansion: "none",
+      filter: true,
+      displayRequestDuration: true,
+    },
+    customSiteTitle: "Starty API Docs",
+  }),
+);
 app.get("/api/health", (req: Request, res: Response) => {
   res.json({ status: "ok", service: "server" });
 });

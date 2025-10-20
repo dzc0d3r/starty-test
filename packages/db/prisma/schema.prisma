@@ -1,14 +1,15 @@
 generator client {
   provider = "prisma-client-js"
-  output = "./generated/client"
+  output   = "./generated/client"
 }
+
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
 }
 
 enum Role {
-  USER  
+  USER
   ADMIN
 }
 
@@ -17,19 +18,18 @@ model User {
   name           String?
   email          String?   @unique
   emailVerified  DateTime? @map("email_verified")
-  hashedPassword String?   @map("hashed_password") 
+  hashedPassword String?   @map("hashed_password")
   image          String?
   role           Role      @default(USER)
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
 
-  accounts Account[] // For OAuth providers like Google, GitHub
-  sessions Session[] // For tracking user sessions
+  accounts Account[]
+  sessions Session[]
 
-  @@map("users") 
+  @@map("users")
 }
 
-// Model for OAuth accounts, allowing users to sign in with third-party providers.
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
@@ -46,15 +46,14 @@ model Account {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId]) // Ensures a user can only link one account per provider.
+  @@unique([provider, providerAccountId])
   @@map("accounts")
 }
 
-// Model for managing user sessions, essential for JWT refresh token strategy.
 model Session {
   id                 String   @id @default(cuid())
   userId             String   @map("user_id")
-  hashedRefreshToken String?  @unique @map("hashed_refresh_token") 
+  hashedRefreshToken String?  @unique @map("hashed_refresh_token")
   userAgent          String?  @map("user_agent")
   ipAddress          String?  @map("ip_address")
   expiresAt          DateTime @map("expires_at")
@@ -67,30 +66,43 @@ model Session {
 
 
 model ManagementCompany {
-  id          String   @id @default(cuid()) 
-  name        String   @unique
-  description String?  @db.Text 
-  logoUrl     String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id                           String   @id @default(cuid())
+  name                         String   @unique
+  description                  String?  @db.Text
+  logoUrl                      String?
 
-  // One-to-Many Relation: A company can manage multiple SCPIs.
-  scpis SCPI[]
+  address                      String?
+  totalAssetsUnderManagement Float?   @map("total_assets_under_management")
+  fundCount                    Int?     @map("fund_count")
+  majorityShareholder          String?  @map("majority_shareholder")
+
+  scpis                        SCPI[]
+  createdAt                    DateTime @default(now()) @map("created_at")
+  updatedAt                    DateTime @updatedAt @map("updated_at")
 
   @@map("management_companies")
 }
 
 model SCPI {
-  id               String   @id @default(cuid())
-  name             String
-  type             String   // e.g., "Rendement", "Fiscale"
-  capitalization   Float
-  distributionRate Float?   @map("distribution_rate")
-  createdAt        DateTime @default(now()) @map("created_at")
-  updatedAt        DateTime @updatedAt @map("updated_at")
+  id                  String   @id @default(cuid())
+  name                String
+  type                String   // e.g., Rendement, Fiscale, Diversifiée
 
-  // Many-to-One Relation: Each SCPI must belong to exactly one ManagementCompany.
+  capitalization      Float?   // Capitalisation (M€)
+  distributionRate    Float?   @map("distribution_rate") // Taux de Distribution (%)
+
+  subscriptionMinimum Int?     @map("subscription_minimum") // Minimum souscription (nombre de parts)
+  partPrice           Float?   @map("part_price")           // Prix de la part (€)
+  associateCount      Int?     @map("associate_count")      // Nombre d'associés
+  partCount           Int?     @map("part_count")           // Nombre de parts
+  buildingCount       Int?     @map("building_count")       // Nombre d'immeubles
+  tenantCount         Int?     @map("tenant_count")         // Nombre de locataires
+  occupancyRate       Float?   @map("occupancy_rate")       // Taux d’occupation financier (%)
+
   managementCompany   ManagementCompany @relation(fields: [managementCompanyId], references: [id], onDelete: Cascade)
-  managementCompanyId String @map("management_company_id") 
+  managementCompanyId String            @map("management_company_id")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
   @@map("scpis")
 }

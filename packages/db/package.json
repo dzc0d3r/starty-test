@@ -10,7 +10,7 @@
     "db:studio": "prisma studio",
     "db:up": "docker-compose up -d --build db",
     "db:down": "docker-compose stop db",
-    "db:seed": "prisma db seed",
+    "db:seed": "pnpm db:up && prisma db seed",
     "postinstall": "prisma generate"
   },
   "dependencies": {
