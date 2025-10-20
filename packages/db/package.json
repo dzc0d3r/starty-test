@@ -10,6 +10,7 @@
     "db:studio": "prisma studio",
     "db:up": "docker-compose up -d --build db",
     "db:down": "docker-compose stop db",
+    "db:seed": "prisma db seed",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -17,12 +18,16 @@
     "@prisma/extension-accelerate": "^2.0.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@types/node": "^24.8.1",
     "@workspace/typescript-config": "workspace:*",
-    "prisma": "^5.22.0"
+    "argon2": "^0.44.0",
+    "prisma": "^5.22.0",
+    "tsx": "^4.20.6"
   },
   "prisma": {
-    "schema": "prisma/schema.prisma"
+    "schema": "prisma/schema.prisma",
+    "seed": "tsx prisma/seed.ts"
   },
   "exports": {
     ".": "./src/index.ts"
