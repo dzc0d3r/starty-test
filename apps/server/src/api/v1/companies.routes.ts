@@ -2,9 +2,9 @@ import { Router } from "express";
 import {
   createCompanyHandler,
   getAllCompaniesHandler,
-} from "../../controllers/company.controller";
-import { validate } from "../../middleware/validateResource";
-import { createCompanySchema } from "../../validations/company.schema";
+} from "../../controllers/company.controller.js";
+import { validate } from "../../middleware/validateResource.js";
+import { createCompanySchema } from "../../validations/company.schema.js";
 
 const router = Router();
 

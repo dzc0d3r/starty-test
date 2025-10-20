@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import * as CompanyService from "../services/company.service";
-import { CreateCompanyInput } from "../validations/company.schema";
+import * as CompanyService from "../services/company.service.js";
+import { CreateCompanyInput } from "../validations/company.schema.js";
 
 /*
  *  GET ('/companies')

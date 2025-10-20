@@ -11,6 +11,7 @@ RUN pnpm add -g turbo
 COPY . .
 RUN turbo prune server --docker
 
+
 # Add lockfile and package.json's of isolated subworkspace 
 FROM base AS installer
 RUN apt update
@@ -18,7 +19,7 @@ WORKDIR /app
 
 # First install dependencies (as they change less often)
 COPY --from=builder /app/out/json/ .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
 
 
 # Build the project and its dependencies

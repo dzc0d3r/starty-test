@@ -1,12 +1,12 @@
 import cors from "cors";
-import express, { Request, Response } from "express";
+import express, { Express, Request, Response } from "express";
 import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
-import api from "./api";
-import swaggerSpec from "./docs/swagger";
-import { errorHandler } from "./middleware/errorHandler";
+import api from "./api/index.js";
+import swaggerSpec from "./docs/swagger.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
-const app = express();
+const app: Express = express();
 
 app.use(cors());
 app.use(helmet());
