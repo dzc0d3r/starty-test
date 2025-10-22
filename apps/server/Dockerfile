@@ -1,11 +1,13 @@
-FROM node:22-bullseye-slim AS base
+FROM node:22-bookworm-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+# for prisma
+RUN apt update && apt install openssl -y
 RUN corepack enable
 
 
 FROM base AS builder
-RUN apt update
+RUN apt update 
 WORKDIR /app
 RUN pnpm add -g turbo 
 COPY . .
@@ -35,6 +37,7 @@ COPY --from=builder /app/out/full/ .
 RUN pnpm turbo build
 
 FROM base AS runner
+RUN apt update
 WORKDIR /app
 
 # Don't run production as root
