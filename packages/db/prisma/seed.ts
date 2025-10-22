@@ -40,6 +40,28 @@ async function main() {
     `   - ${adminUsersData.length} admin users created with password: "${plainTextPassword}"`,
   );
 
+  console.log("👤 Seeding regular users...");
+  const regularUsersData = [
+    { email: "user1@test.com", name: "Thomas Anderson" },
+    { email: "user2@test.com", name: "Agent Smith" },
+    { email: "user3@test.com", name: "John Wick" },
+    { email: "user4@test.com", name: "Clark Kent" },
+  ];
+
+  for (const userData of regularUsersData) {
+    const hashedPassword = await argon2.hash(plainTextPassword);
+    await prisma.user.create({
+      data: {
+        ...userData,
+        hashedPassword: hashedPassword,
+        role: "USER",
+        emailVerified: new Date(),
+      },
+    });
+  }
+  console.log(
+    `   - ${regularUsersData.length} users created with password: "${plainTextPassword}"`,
+  );
   console.log("🏢 Seeding management companies...");
   const companiesToCreate = Array.from({ length: 10 }).map(() => ({
     name: `${faker.company.name()} AM`,

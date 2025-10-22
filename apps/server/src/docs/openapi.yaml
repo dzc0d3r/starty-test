@@ -2,7 +2,9 @@ openapi: 3.0.0
 info:
   title: SCPI Management API
   version: "1.0.0"
-  description: API for managing SCPIs (Sociétés Civiles de Placement Immobilier) and their management companies.
+  description:
+    API for managing SCPIs (Sociétés Civiles de Placement Immobilier) and their
+    management companies.
   contact:
     name: Walid
 
@@ -22,33 +24,38 @@ paths:
       tags:
         - Auth
       summary: Authenticate a user
-      description: Logs in a user with an email and password. On success, it returns a short-lived access token in the JSON body and sets two cookies; a session 'accessToken' and a long-lived, secure 'refreshToken'.
+      description:
+        Logs in a user with an email and password. On success, it returns a
+        short-lived access token in the JSON body and sets two cookies; a
+        session 'accessToken' and a long-lived, secure 'refreshToken'.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginInput'
+              $ref: "#/components/schemas/LoginInput"
       responses:
         "200":
           description: Login successful.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: "#/components/schemas/LoginResponse"
         "401":
           description: Unauthorized - Invalid credentials provided.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /companies:
     get:
       tags:
         - Companies
       summary: Retrieve a list of all management companies
-      description: Fetches a JSON array of all management companies from the database. This is a public endpoint.
+      description:
+        Fetches a JSON array of all management companies from the database. This
+        is a public endpoint.
       responses:
         "200":
           description: A list of companies.
@@ -57,7 +64,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CompanyResponse'
+                  $ref: "#/components/schemas/CompanyResponse"
         "500":
           description: Internal Server Error
 
@@ -65,7 +72,9 @@ paths:
       tags:
         - Companies
       summary: Create a new management company (Admin Only)
-      description: Adds a new management company to the database. Requires authentication and an Admin role.
+      description:
+        Adds a new management company to the database. Requires authentication
+        and an Admin role.
       security:
         - bearerAuth: []
       requestBody:
@@ -73,20 +82,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCompanyInput'
+              $ref: "#/components/schemas/CreateCompanyInput"
       responses:
         "201":
           description: Company created successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CompanyResponse'
+                $ref: "#/components/schemas/CompanyResponse"
         "400":
           description: Bad Request - Invalid input data.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
+                $ref: "#/components/schemas/ValidationErrorResponse"
         "401":
           description: Unauthorized - No token or invalid token provided.
         "403":
@@ -115,11 +124,11 @@ components:
         email:
           type: string
           format: email
-          example: 'admin1@test.com'
+          example: "admin1@test.com"
         password:
           type: string
           format: password
-          example: 'Password123!'
+          example: "Password123!"
 
     CreateCompanyInput:
       type: object
@@ -128,14 +137,14 @@ components:
       properties:
         name:
           type: string
-          example: 'New Company Name'
+          example: "New Company Name"
         description:
           type: string
-          example: 'A brief description of the company.'
+          example: "A brief description of the company."
         logoUrl:
           type: string
           format: uri
-          example: 'https://example.com/logo.png'
+          example: "https://example.com/logo.png"
 
     # --- Response Schemas ---
     LoginResponse:
@@ -143,9 +152,9 @@ components:
       properties:
         accessToken:
           type: string
-          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
         user:
-          $ref: '#/components/schemas/UserResponse'
+          $ref: "#/components/schemas/UserResponse"
 
     UserResponse:
       type: object
@@ -167,10 +176,10 @@ components:
       properties:
         id:
           type: string
-          example: 'clw8d9j0k0000z89a7b6c5d4e'
+          example: "clw8d9j0k0000z89a7b6c5d4e"
         name:
           type: string
-          example: 'Corum AM'
+          example: "Corum AM"
         description:
           type: string
           nullable: true
@@ -192,23 +201,23 @@ components:
       properties:
         status:
           type: string
-          example: 'error'
+          example: "error"
         message:
           type: string
-          example: 'An unexpected error occurred.'
+          example: "An unexpected error occurred."
 
     ValidationErrorResponse:
       type: object
       properties:
         status:
           type: string
-          example: 'error'
+          example: "error"
         message:
           type: object
           properties:
             message:
               type: string
-              example: 'Invalid request data'
+              example: "Invalid request data"
             errors:
               type: object
               properties:
