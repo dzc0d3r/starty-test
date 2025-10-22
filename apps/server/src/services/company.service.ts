@@ -1,6 +1,6 @@
 import { prisma } from "db/client";
 import { AppError } from "../utils/AppError.js";
-import { CreateCompanyInput } from "../validations/company.schema.js"; // We will create this soon
+import { CreateCompanyInput } from "../validations/company.schema.js";
 
 export const getAllCompanies = async () => {
   return await prisma.managementCompany.findMany();
