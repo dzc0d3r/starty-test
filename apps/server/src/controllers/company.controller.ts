@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import * as CompanyService from "../services/company.service.js";
-import { CreateCompanyInput } from "../validations/company.schema.js";
+import {
+  CompanyParams,
+  CreateCompanyInput,
+  UpdateCompanyInput,
+} from "../validations/company.schema.js";
 
 /*
  *  GET ('/companies')
@@ -29,6 +33,48 @@ export const createCompanyHandler = async (
   try {
     const newCompany = await CompanyService.createCompany(req.body);
     res.status(201).json(newCompany);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCompanyHandler = async (
+  req: Request<CompanyParams>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const company = await CompanyService.getCompanyById(req.params.id);
+    res.status(200).json(company);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateCompanyHandler = async (
+  req: Request<CompanyParams, {}, UpdateCompanyInput>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const updatedCompany = await CompanyService.updateCompany(
+      req.params.id,
+      req.body,
+    );
+    res.status(200).json(updatedCompany);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteCompanyHandler = async (
+  req: Request<CompanyParams>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    await CompanyService.deleteCompany(req.params.id);
+    res.status(204).send(); // Send 204 No Content
   } catch (error) {
     next(error);
   }
