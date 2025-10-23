@@ -2,7 +2,9 @@
 
 import { getPlaiceholder } from "plaiceholder";
 
-export async function getBlurDataURL(imageUrl: string): Promise<string> {
+export async function getBlurDataURL(
+  imageUrl: string,
+): Promise<string | undefined> {
   try {
     const res = await fetch(imageUrl);
     if (!res.ok) throw new Error(`Failed to fetch image: ${res.status}`);

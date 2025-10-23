@@ -1,5 +1,5 @@
 import argon2 from "argon2";
-import { prisma } from "db/client";
+import { prisma, User } from "db/client";
 import { LoginInput } from "schemas";
 import { AppError } from "../utils/AppError.js";
 import {
@@ -69,7 +69,7 @@ export const refreshSession = async (incomingRefreshToken: string) => {
     orderBy: { createdAt: "desc" },
   });
 
-  if (!session) {
+  if (!session || !session.hashedRefreshToken) {
     throw new AppError(401, "Session not found. Please log in again.");
   }
 

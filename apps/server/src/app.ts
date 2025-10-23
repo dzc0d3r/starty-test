@@ -1,5 +1,5 @@
 import cookieParser from "cookie-parser";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import express, { Express, Request, Response } from "express";
 import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
@@ -17,7 +17,7 @@ const allowedOrigins = [
   "http://localhost:8081",
 ];
 const corsOptions: CorsOptions = {
-  origin: (origin, callback) => {
+  origin: (origin: string | undefined, callback) => {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
