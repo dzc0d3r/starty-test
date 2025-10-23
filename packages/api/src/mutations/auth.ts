@@ -21,7 +21,7 @@ export const useLoginMutation = () => {
     onSuccess: (data) => {
       setToken(data.accessToken);
 
-      queryClient.setQueryData<UserResponse>(authKeys.me, data.user);
+      queryClient.invalidateQueries({ queryKey: authKeys.me });
     },
   });
 };

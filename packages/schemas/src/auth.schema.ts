@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { baseUserSchema } from "./base.schema.js";
 
 export const loginSchema = z.object({
   body: z.object({
@@ -15,4 +16,4 @@ export const loginResponseSchema = z.object({
 
 export type LoginInput = z.infer<typeof loginSchema>["body"];
 export type LoginResponse = z.infer<typeof loginResponseSchema>;
-export type UserResponse = z.infer<typeof baseUserSchema>; // <-- Infer from base
+export type UserResponse = z.infer<typeof baseUserSchema>;
