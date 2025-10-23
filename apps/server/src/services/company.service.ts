@@ -5,8 +5,12 @@ import {
   UpdateCompanyInput,
 } from "../validations/company.schema.js";
 
+const includeScpis = {
+  scpis: true,
+};
+
 export const getAllCompanies = async () => {
-  return await prisma.managementCompany.findMany();
+  return await prisma.managementCompany.findMany({ include: includeScpis });
 };
 
 export const createCompany = async (input: CreateCompanyInput) => {
@@ -29,6 +33,7 @@ export const createCompany = async (input: CreateCompanyInput) => {
 export const getCompanyById = async (id: string) => {
   const company = await prisma.managementCompany.findUnique({
     where: { id },
+    include: includeScpis,
   });
 
   if (!company) {

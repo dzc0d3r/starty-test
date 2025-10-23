@@ -166,7 +166,7 @@ paths:
           description: Conflict - A company with this name already exists.
         "500":
           description: Internal Server Error
-  
+
   /companies/{id}:
     parameters:
       - in: path
@@ -179,8 +179,10 @@ paths:
 
     get:
       tags: [Companies]
-      summary: Get a single management company by ID (Admin Only)
-      description: Fetches a single management company based on its CUID. Requires authentication and an Admin role.
+      summary: Get a single management company by ID
+      description:
+        Fetches a single management company based on its CUID. Requires
+        authentication and an Admin role.
       security:
         - bearerAuth: []
       responses:
@@ -189,7 +191,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CompanyResponse'
+                $ref: "#/components/schemas/CompanyResponse"
         "401":
           description: Unauthorized
         "403":
@@ -200,7 +202,9 @@ paths:
     put:
       tags: [Companies]
       summary: Update a management company (Admin Only)
-      description: Updates the details of a specific management company. Requires authentication and an Admin role.
+      description:
+        Updates the details of a specific management company. Requires
+        authentication and an Admin role.
       security:
         - bearerAuth: []
       requestBody:
@@ -208,14 +212,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateCompanyInput'
+              $ref: "#/components/schemas/UpdateCompanyInput"
       responses:
         "200":
           description: Company updated successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CompanyResponse'
+                $ref: "#/components/schemas/CompanyResponse"
         "400":
           description: Bad Request - Invalid input data.
         "401":
@@ -230,7 +234,9 @@ paths:
     delete:
       tags: [Companies]
       summary: Delete a management company (Admin Only)
-      description: Deletes a specific management company and all of its associated SCPIs. Requires authentication and an Admin role.
+      description:
+        Deletes a specific management company and all of its associated SCPIs.
+        Requires authentication and an Admin role.
       security:
         - bearerAuth: []
       responses:
@@ -242,7 +248,102 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
+  # --- SCPIs Paths ---
+  /scpis:
+    get:
+      tags: [SCPIs]
+      summary: Retrieve a list of all SCPIs
+      description: Fetches a JSON array of all SCPIs, with their parent management company included. This is a public endpoint.
+      responses:
+        "200":
+          description: A list of SCPIs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SCPIResponse'
+    post:
+      tags: [SCPIs]
+      summary: Create a new SCPI (Admin Only)
+      description: Adds a new SCPI to the database. Requires authentication and an Admin role.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSCPIInput'
+      responses:
+        "201":
+          description: SCPI created successfully.
+        "400":
+          description: Bad Request - Invalid input data or invalid managementCompanyId.
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
 
+  /scpis/{id}: 
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: cuid
+        description: The CUID of the SCPI.
+
+    get:
+      tags: [SCPIs]
+      summary: Get a single SCPI by ID
+      description: Fetches a single SCPI based on its CUID, with its parent management company included. This is a public endpoint.
+      responses:
+        "200":
+          description: SCPI retrieved successfully.
+        "404":
+          description: Not Found - SCPI with this ID does not exist.
+
+    put:
+      tags: [SCPIs]
+      summary: Update an SCPI (Admin Only)
+      description: Updates the details of a specific SCPI. Requires authentication and an Admin role.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSCPIInput'
+      responses:
+        "200":
+          description: SCPI updated successfully.
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+
+    delete:
+      tags: [SCPIs]
+      summary: Delete an SCPI (Admin Only)
+      description: Deletes a specific SCPI. Requires authentication and an Admin role.
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: SCPI deleted successfully. No content.
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
 components:
   securitySchemes:
     bearerAuth:
@@ -342,7 +443,73 @@ components:
         updatedAt:
           type: string
           format: date-time
+        scpis: 
+          type: array
+          items:
+            $ref: '#/components/schemas/SCPIResponse'
+    CreateSCPIInput: 
+      type: object
+      required:
+        - name
+        - type
+        - managementCompanyId
+      properties:
+        name: { type: string }
+        type: { type: string }
+        capitalization: { type: number, format: float }
+        distributionRate: { type: number, format: float }
+        subscriptionMinimum: { type: integer }
+        partPrice: { type: number, format: float }
+        associateCount: { type: integer }
+        partCount: { type: integer }
+        buildingCount: { type: integer }
+        tenantCount: { type: integer }
+        occupancyRate: { type: number, format: float }
+        managementCompanyId: { type: string, format: cuid }
+    
+    UpdateSCPIInput:
+      type: object
+      properties:
+        name: { type: string }
+        type: { type: string }
+        capitalization: { type: number, format: float }
+        distributionRate: { type: number, format: float }
+        subscriptionMinimum: { type: integer }
+        partPrice: { type: number, format: float }
+        associateCount: { type: integer }
+        partCount: { type: integer }
+        buildingCount: { type: integer }
+        tenantCount: { type: integer }
+        occupancyRate: { type: number, format: float }
+        managementCompanyId: { type: string, format: cuid }
 
+    SCPIResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        capitalization:
+          type: number
+          format: float
+        partPrice:
+          type: number
+          format: float
+        occupancyRate:
+          type: number
+          format: float
+        managementCompanyId:
+          type: string
+          $ref: '#/components/schemas/CompanyResponse'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     # --- Error Schemas ---
     ErrorResponse:
       type: object
