@@ -9,4 +9,10 @@ export const loginSchema = z.object({
   }),
 });
 
+export const loginResponseSchema = z.object({
+  accessToken: z.string(),
+});
+
 export type LoginInput = z.infer<typeof loginSchema>["body"];
+export type LoginResponse = z.infer<typeof loginResponseSchema>;
+export type UserResponse = z.infer<typeof baseUserSchema>; // <-- Infer from base

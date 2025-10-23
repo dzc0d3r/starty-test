@@ -1,11 +1,18 @@
 import { z } from "zod";
+import { baseCompanySchema, baseScpiSchema } from "./base.schema.js";
 
-// Schema for URL parameters containing a CUID
+export const companySchema = baseCompanySchema;
+
+export const companyResponseWithScpisSchema = baseCompanySchema.extend({
+  scpis: z.array(baseScpiSchema),
+});
+
 const params = z.object({
   id: z
     .string({ required_error: "ID is required" })
     .cuid("Invalid CUID format for ID"),
 });
+
 export const createCompanySchema = z.object({
   body: z.object({
     name: z.string({ required_error: "Name is required" }).min(3),
@@ -22,24 +29,15 @@ export const updateCompanySchema = z.object({
   body: createCompanySchema.shape.body.partial(),
   params,
 });
+
 export const companyParamsSchema = z.object({
   params,
 });
-const companySchema = z.object({
-  id: z.string().cuid(),
-  name: z.string(),
-  description: z.string().nullable(),
-  logoUrl: z.string().url().nullable(),
-  address: z.string().nullable(),
-  totalAssetsUnderManagement: z.number().nullable(),
-  fundCount: z.number().int().nullable(),
-  majorityShareholder: z.string().nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  // scpis: z.array(z.any()),
-});
 
+export type CompanyResponse = z.infer<typeof companySchema>;
+export type CompanyResponseWithScpis = z.infer<
+  typeof companyResponseWithScpisSchema
+>;
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>["body"];
 export type UpdateCompanyInput = z.infer<typeof updateCompanySchema>["body"];
-export type CompanyResponse = z.infer<typeof companySchema>;
 export type CompanyParams = z.infer<typeof companyParamsSchema>["params"];

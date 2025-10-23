@@ -1,4 +1,11 @@
 import { z } from "zod";
+import { baseCompanySchema, baseScpiSchema } from "./base.schema.js";
+
+export const scpiSchema = baseScpiSchema;
+
+export const scpiResponseSchema = baseScpiSchema.extend({
+  managementCompany: baseCompanySchema,
+});
 
 const params = z.object({
   id: z
@@ -23,19 +30,11 @@ const body = z.object({
   occupancyRate: z.number().optional(),
 });
 
-export const createScpiSchema = z.object({
-  body,
-});
+export const createScpiSchema = z.object({ body });
+export const updateScpiSchema = z.object({ body: body.partial(), params });
+export const scpiParamsSchema = z.object({ params });
 
-export const updateScpiSchema = z.object({
-  body: body.partial(),
-  params,
-});
-
-export const scpiParamsSchema = z.object({
-  params,
-});
-
+export type SCPIResponse = z.infer<typeof scpiResponseSchema>;
 export type CreateScpiInput = z.infer<typeof createScpiSchema>["body"];
 export type UpdateScpiInput = z.infer<typeof updateScpiSchema>["body"];
 export type ScpiParams = z.infer<typeof scpiParamsSchema>["params"];
