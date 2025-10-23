@@ -25,7 +25,21 @@ export const updateCompanySchema = z.object({
 export const companyParamsSchema = z.object({
   params,
 });
+const companySchema = z.object({
+  id: z.string().cuid(),
+  name: z.string(),
+  description: z.string().nullable(),
+  logoUrl: z.string().url().nullable(),
+  address: z.string().nullable(),
+  totalAssetsUnderManagement: z.number().nullable(),
+  fundCount: z.number().int().nullable(),
+  majorityShareholder: z.string().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  // scpis: z.array(z.any()),
+});
 
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>["body"];
 export type UpdateCompanyInput = z.infer<typeof updateCompanySchema>["body"];
+export type CompanyResponse = z.infer<typeof companySchema>;
 export type CompanyParams = z.infer<typeof companyParamsSchema>["params"];
