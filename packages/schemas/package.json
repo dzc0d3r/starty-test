@@ -1,0 +1,18 @@
+{
+  "name": "schemas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint . --ext .ts"
+  },
+  "devDependencies": {
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  }
+}

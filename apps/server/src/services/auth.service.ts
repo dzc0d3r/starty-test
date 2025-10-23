@@ -1,12 +1,12 @@
 import argon2 from "argon2";
 import { prisma } from "db/client";
+import { LoginInput } from "schemas";
 import { AppError } from "../utils/AppError.js";
 import {
   signAccessToken,
   signRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt.js";
-import { LoginInput } from "../validations/auth.schema.js";
 
 export const login = async (
   input: LoginInput,

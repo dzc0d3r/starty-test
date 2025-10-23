@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { createScpiSchema, scpiParamsSchema, updateScpiSchema } from "schemas";
 import {
   createScpiHandler,
   deleteScpiHandler,
@@ -9,11 +10,6 @@ import {
 import { requireAdmin } from "../../middleware/requireAdmin.js";
 import { requireAuth } from "../../middleware/requireAuth.js";
 import { validate } from "../../middleware/validateResource.js";
-import {
-  createScpiSchema,
-  scpiParamsSchema,
-  updateScpiSchema,
-} from "../../validations/scpi.schema.js";
 
 const router: Router = Router();
 const requireAdminAccess = [requireAuth, requireAdmin];

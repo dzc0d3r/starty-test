@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import { CompanyParams, CreateCompanyInput, UpdateCompanyInput } from "schemas";
 import * as CompanyService from "../services/company.service.js";
-import {
-  CompanyParams,
-  CreateCompanyInput,
-  UpdateCompanyInput,
-} from "../validations/company.schema.js";
 
 /*
  *  GET ('/companies')

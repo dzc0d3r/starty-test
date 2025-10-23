@@ -144,6 +144,9 @@ importers:
       pino-pretty:
         specifier: ^13.1.2
         version: 13.1.2
+      schemas:
+        specifier: workspace:^
+        version: link:../../packages/schemas
       swagger-ui-express:
         specifier: ^5.0.1
         version: 5.0.1(express@5.1.0)
@@ -307,6 +310,19 @@ importers:
         version: 4.20.6
 
   packages/db/prisma/generated/client: {}
+
+  packages/schemas:
+    dependencies:
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
+    devDependencies:
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../config/eslint
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../config/typescript
 
   packages/ui:
     dependencies:

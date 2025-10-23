@@ -253,7 +253,9 @@ paths:
     get:
       tags: [SCPIs]
       summary: Retrieve a list of all SCPIs
-      description: Fetches a JSON array of all SCPIs, with their parent management company included. This is a public endpoint.
+      description:
+        Fetches a JSON array of all SCPIs, with their parent management company
+        included. This is a public endpoint.
       responses:
         "200":
           description: A list of SCPIs.
@@ -262,11 +264,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/SCPIResponse'
+                  $ref: "#/components/schemas/SCPIResponse"
     post:
       tags: [SCPIs]
       summary: Create a new SCPI (Admin Only)
-      description: Adds a new SCPI to the database. Requires authentication and an Admin role.
+      description:
+        Adds a new SCPI to the database. Requires authentication and an Admin
+        role.
       security:
         - bearerAuth: []
       requestBody:
@@ -274,18 +278,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateSCPIInput'
+              $ref: "#/components/schemas/CreateSCPIInput"
       responses:
         "201":
           description: SCPI created successfully.
         "400":
-          description: Bad Request - Invalid input data or invalid managementCompanyId.
+          description:
+            Bad Request - Invalid input data or invalid managementCompanyId.
         "401":
           description: Unauthorized
         "403":
           description: Forbidden
 
-  /scpis/{id}: 
+  /scpis/{id}:
     parameters:
       - in: path
         name: id
@@ -298,7 +303,9 @@ paths:
     get:
       tags: [SCPIs]
       summary: Get a single SCPI by ID
-      description: Fetches a single SCPI based on its CUID, with its parent management company included. This is a public endpoint.
+      description:
+        Fetches a single SCPI based on its CUID, with its parent management
+        company included. This is a public endpoint.
       responses:
         "200":
           description: SCPI retrieved successfully.
@@ -308,7 +315,9 @@ paths:
     put:
       tags: [SCPIs]
       summary: Update an SCPI (Admin Only)
-      description: Updates the details of a specific SCPI. Requires authentication and an Admin role.
+      description:
+        Updates the details of a specific SCPI. Requires authentication and an
+        Admin role.
       security:
         - bearerAuth: []
       requestBody:
@@ -316,7 +325,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateSCPIInput'
+              $ref: "#/components/schemas/UpdateSCPIInput"
       responses:
         "200":
           description: SCPI updated successfully.
@@ -332,7 +341,8 @@ paths:
     delete:
       tags: [SCPIs]
       summary: Delete an SCPI (Admin Only)
-      description: Deletes a specific SCPI. Requires authentication and an Admin role.
+      description:
+        Deletes a specific SCPI. Requires authentication and an Admin role.
       security:
         - bearerAuth: []
       responses:
@@ -443,11 +453,11 @@ components:
         updatedAt:
           type: string
           format: date-time
-        scpis: 
+        scpis:
           type: array
           items:
-            $ref: '#/components/schemas/SCPIResponse'
-    CreateSCPIInput: 
+            $ref: "#/components/schemas/SCPIResponse"
+    CreateSCPIInput:
       type: object
       required:
         - name
@@ -466,7 +476,7 @@ components:
         tenantCount: { type: integer }
         occupancyRate: { type: number, format: float }
         managementCompanyId: { type: string, format: cuid }
-    
+
     UpdateSCPIInput:
       type: object
       properties:
@@ -503,7 +513,7 @@ components:
           format: float
         managementCompanyId:
           type: string
-          $ref: '#/components/schemas/CompanyResponse'
+          $ref: "#/components/schemas/CompanyResponse"
         createdAt:
           type: string
           format: date-time

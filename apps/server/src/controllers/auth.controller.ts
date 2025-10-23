@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
+import { LoginInput } from "schemas";
 import config from "../config/index.js";
 import * as AuthService from "../services/auth.service.js";
 import { AppError } from "../utils/AppError.js";
-import { LoginInput } from "../validations/auth.schema.js";
 
 const cookieOptions = {
   secure: config.NODE_ENV === "production",

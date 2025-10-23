@@ -1,5 +1,10 @@
 import { Router } from "express";
 import {
+  companyParamsSchema,
+  createCompanySchema,
+  updateCompanySchema,
+} from "schemas";
+import {
   createCompanyHandler,
   deleteCompanyHandler,
   getAllCompaniesHandler,
@@ -9,11 +14,6 @@ import {
 import { requireAdmin } from "../../middleware/requireAdmin.js";
 import { requireAuth } from "../../middleware/requireAuth.js";
 import { validate } from "../../middleware/validateResource.js";
-import {
-  companyParamsSchema,
-  createCompanySchema,
-  updateCompanySchema,
-} from "../../validations/company.schema.js";
 
 const router: Router = Router();
 const requireAdminAccess = [requireAuth, requireAdmin];

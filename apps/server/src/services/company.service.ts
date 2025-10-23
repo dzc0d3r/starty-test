@@ -1,9 +1,6 @@
 import { prisma } from "db/client";
+import { CreateCompanyInput, UpdateCompanyInput } from "schemas";
 import { AppError } from "../utils/AppError.js";
-import {
-  CreateCompanyInput,
-  UpdateCompanyInput,
-} from "../validations/company.schema.js";
 
 const includeScpis = {
   scpis: true,

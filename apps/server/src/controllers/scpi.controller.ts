@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import { CreateScpiInput, ScpiParams, UpdateScpiInput } from "schemas";
 import * as ScpiService from "../services/scpi.service.js";
-import {
-  CreateScpiInput,
-  ScpiParams,
-  UpdateScpiInput,
-} from "../validations/scpi.schema.js";
 
 export const getAllScpisHandler = async (
   req: Request,

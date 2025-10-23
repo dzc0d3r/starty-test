@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { loginSchema } from "schemas";
 import {
   getMeHandler,
   loginHandler,
@@ -7,7 +8,6 @@ import {
 } from "../../controllers/auth.controller.js";
 import { requireAuth } from "../../middleware/requireAuth.js";
 import { validate } from "../../middleware/validateResource.js";
-import { loginSchema } from "../../validations/auth.schema.js";
 
 const router: Router = Router();
 
