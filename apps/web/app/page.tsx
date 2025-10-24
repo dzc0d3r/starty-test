@@ -1,4 +1,4 @@
-import { HeroSection, ScpiOpportunities } from "./_components";
+import { CompanySlider, HeroSection, ScpiOpportunities } from "./_components";
 
 export default function Page() {
   return (
@@ -6,6 +6,7 @@ export default function Page() {
       <div className="flex flex-col items-center justify-center gap-4">
         <HeroSection />
         <ScpiOpportunities />
+        <CompanySlider />
       </div>
     </div>
   );

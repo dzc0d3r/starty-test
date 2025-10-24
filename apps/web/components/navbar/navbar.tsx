@@ -14,6 +14,7 @@ import {
 } from "@workspace/ui/components/popover";
 import { cn } from "@workspace/ui/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -130,7 +131,7 @@ const XIcon = ({ className, ...props }: React.SVGAttributes<SVGElement>) => (
 export interface NavbarNavLink {
   href: string;
   label: string;
-  active?: boolean;
+  exact?: boolean; // If true, only mark as active when path exactly matches
 }
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
@@ -149,7 +150,7 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
 
 // Default navigation links
 const defaultNavigationLinks: NavbarNavLink[] = [
-  { href: "/", label: "Home", active: true },
+  { href: "/", label: "Home", exact: true },
   { href: "/companies", label: "Companies" },
   { href: "/scpis", label: "SCPIs" },
   { href: "/about", label: "About" },
@@ -179,6 +180,15 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     const [searchQuery, setSearchQuery] = useState("");
     const containerRef = useRef<HTMLElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
+    const pathname = usePathname();
+
+    // Helper function to check if a link is active
+    const isLinkActive = (link: NavbarNavLink) => {
+      if (link.exact) {
+        return pathname === link.href;
+      }
+      return pathname.startsWith(link.href);
+    };
 
     useEffect(() => {
       const checkWidth = () => {
@@ -263,21 +273,48 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 <PopoverContent align="start" className="w-48 p-2">
                   <NavigationMenu className="max-w-none">
                     <NavigationMenuList className="flex-col items-start gap-1">
-                      {navigationLinks.map((link, index) => (
-                        <NavigationMenuItem key={index} className="w-full">
-                          <Link
-                            href={link.href}
-                            className={cn(
-                              "hover:bg-accent hover:text-accent-foreground flex w-full items-center rounded-md px-3 py-2 text-sm font-medium no-underline transition-colors",
-                              link.active
-                                ? "bg-accent text-accent-foreground"
-                                : "text-foreground/80",
-                            )}
+                      {navigationLinks.map((link, index) => {
+                        const isActive = isLinkActive(link);
+                        return (
+                          <NavigationMenuItem key={index} className="w-full">
+                            <Link
+                              href={link.href}
+                              className={cn(
+                                "hover:bg-accent hover:text-accent-foreground flex w-full items-center rounded-md px-3 py-2 text-sm font-medium no-underline transition-colors",
+                                isActive
+                                  ? "bg-accent text-accent-foreground"
+                                  : "text-foreground/80",
+                              )}
+                            >
+                              {link.label}
+                            </Link>
+                          </NavigationMenuItem>
+                        );
+                      })}
+                      <NavigationMenuItem>
+                        <Link href={signInHref}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="hover:bg-accent hover:text-accent-foreground text-sm font-medium"
+                            onClick={onSignInClick}
                           >
-                            {link.label}
-                          </Link>
-                        </NavigationMenuItem>
-                      ))}
+                            {signInText}
+                          </Button>
+                        </Link>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <Link href={ctaHref}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="hover:bg-accent hover:text-accent-foreground text-sm font-medium"
+                            onClick={onCtaClick}
+                          >
+                            {ctaText}
+                          </Button>
+                        </Link>
+                      </NavigationMenuItem>
                     </NavigationMenuList>
                   </NavigationMenu>
                 </PopoverContent>
@@ -289,7 +326,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 href={logoHref}
                 className={cn(
                   "text-primary hover:text-primary/90 flex items-center space-x-2 transition-colors",
-                  isMobile && isSearchOpen && "hidden",
+                  (isMobile || isSearchOpen) && "hidden",
                 )}
               >
                 <div className="text-2xl">{logo}</div>
@@ -301,21 +338,24 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
               {!isMobile && (
                 <NavigationMenu className="flex">
                   <NavigationMenuList className="gap-1">
-                    {navigationLinks.map((link, index) => (
-                      <NavigationMenuItem key={index}>
-                        <Link
-                          href={link.href}
-                          className={cn(
-                            "group hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium no-underline transition-colors focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-                            link.active
-                              ? "bg-accent text-accent-foreground"
-                              : "text-foreground/80 hover:text-foreground",
-                          )}
-                        >
-                          {link.label}
-                        </Link>
-                      </NavigationMenuItem>
-                    ))}
+                    {navigationLinks.map((link, index) => {
+                      const isActive = isLinkActive(link);
+                      return (
+                        <NavigationMenuItem key={index}>
+                          <Link
+                            href={link.href}
+                            className={cn(
+                              "group hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium no-underline transition-colors focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+                              isActive
+                                ? "bg-accent text-accent-foreground"
+                                : "text-foreground/80 hover:text-foreground",
+                            )}
+                          >
+                            {link.label}
+                          </Link>
+                        </NavigationMenuItem>
+                      );
+                    })}
                   </NavigationMenuList>
                 </NavigationMenu>
               )}
@@ -379,7 +419,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
             )}
 
             {/* Auth Buttons - Hidden when search is open on mobile */}
-            {(!isMobile || !isSearchOpen) && (
+            {!isMobile && !isSearchOpen && (
               <>
                 <Link href={signInHref}>
                   <Button

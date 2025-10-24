@@ -6,6 +6,11 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        hostname: "picsum.photos",
+        protocol: "https",
+      },
+
+      {
         hostname: "portail-scpi.fr",
         protocol: "https",
       },
