@@ -7,12 +7,12 @@ export const scpiKeys = {
   detail: (id: string) => [...scpiKeys.all, id] as const,
 };
 
-const getScpis = async (): Promise<SCPIResponse[]> => {
+export const getScpis = async (): Promise<SCPIResponse[]> => {
   const { data } = await api.get("/scpis");
   return data;
 };
 
-const getScpiById = async (id: string): Promise<SCPIResponse> => {
+export const getScpiById = async (id: string): Promise<SCPIResponse> => {
   const { data } = await api.get(`/scpis/${id}`);
   return data;
 };

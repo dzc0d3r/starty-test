@@ -7,13 +7,14 @@ export const companyKeys = {
   detail: (id: string) => [...companyKeys.all, id] as const,
 };
 
-const getCompanies = async (): Promise<CompanyResponse[]> => {
+export const getCompanies = async (): Promise<CompanyResponse[]> => {
   const { data } = await api.get("/companies");
   return data;
 };
 
-const getCompanyById = async (id: string): Promise<CompanyResponse> => {
+export const getCompanyById = async (id: string): Promise<CompanyResponse> => {
   const { data } = await api.get(`/companies/${id}`);
+  console.log(`/companies/${id}`);
   return data;
 };
 

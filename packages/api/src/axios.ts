@@ -32,7 +32,7 @@ const processQueue = (
 export const initializeApi = (baseURL: string) => {
   api.defaults.baseURL = baseURL;
   api.defaults.withCredentials = true;
-
+  api.defaults.headers.common["Accept"] = "application/json";
   // --- REQUEST INTERCEPTOR ---
   api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {

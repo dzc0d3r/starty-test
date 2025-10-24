@@ -7,6 +7,7 @@ import {
   CardHeader,
 } from "@workspace/ui/components/card";
 import { Building, FileText, Star } from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
 import { SCPIResponse } from "schemas";
 
@@ -72,10 +73,12 @@ export const ScpiCard = ({ scpi }: ScpiCardProps) => {
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-3">
         <Button className="w-full">Simulate</Button>
-        <Button variant="outline" className="w-full">
-          <FileText className="mr-2 h-4 w-4" />
-          View Details
-        </Button>
+        <Link href={`/scpis/${scpi.id}`}>
+          <Button variant="outline" className="w-full">
+            <FileText className="mr-2 h-4 w-4" />
+            View Details
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
