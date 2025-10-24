@@ -14,6 +14,10 @@ const nextConfig = {
         hostname: "portail-scpi.fr",
         protocol: "https",
       },
+      {
+        hostname: "images.unsplash.com",
+        protocol: "https",
+      },
     ],
   },
 };

@@ -16,7 +16,7 @@ export const CompanySlider = () => {
     if (isLoading) {
       return Array.from({ length: 4 }).map((_, index) => (
         <SwiperSlide key={index}>
-          <Skeleton className="h-[220px] w-full rounded-xl" />
+          <Skeleton className="h-36 w-full rounded-xl" />
         </SwiperSlide>
       ));
     }
@@ -38,7 +38,7 @@ export const CompanySlider = () => {
     }
 
     return companies.map((company) => (
-      <SwiperSlide key={company.id} className="h-auto min-h-28 p-1">
+      <SwiperSlide key={company.id} className="h-auto p-1">
         <CompanyCard company={company} />
       </SwiperSlide>
     ));
