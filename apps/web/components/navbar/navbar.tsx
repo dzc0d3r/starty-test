@@ -13,6 +13,7 @@ import {
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
 import { cn } from "@workspace/ui/lib/utils";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
@@ -127,6 +128,118 @@ const XIcon = ({ className, ...props }: React.SVGAttributes<SVGElement>) => (
   </svg>
 );
 
+// Sun icon for light mode
+const SunIcon = ({ className, ...props }: React.SVGAttributes<SVGElement>) => (
+  <svg
+    className={cn("pointer-events-none", className)}
+    width={16}
+    height={16}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2" />
+    <path d="M12 20v2" />
+    <path d="m4.93 4.93 1.41 1.41" />
+    <path d="m17.66 17.66 1.41 1.41" />
+    <path d="M2 12h2" />
+    <path d="M20 12h2" />
+    <path d="m6.34 17.66-1.41 1.41" />
+    <path d="m19.07 4.93-1.41 1.41" />
+  </svg>
+);
+
+// Moon icon for dark mode
+const MoonIcon = ({ className, ...props }: React.SVGAttributes<SVGElement>) => (
+  <svg
+    className={cn("pointer-events-none", className)}
+    width={16}
+    height={16}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+  </svg>
+);
+
+// System icon for system theme
+const SystemIcon = ({
+  className,
+  ...props
+}: React.SVGAttributes<SVGElement>) => (
+  <svg
+    className={cn("pointer-events-none", className)}
+    width={16}
+    height={16}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+    <line x1="8" y1="21" x2="16" y2="21" />
+    <line x1="12" y1="17" x2="12" y2="21" />
+  </svg>
+);
+
+// Theme Toggle Component
+const ThemeToggle = () => {
+  const { theme, setTheme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" className="h-9 w-9" disabled>
+        <SystemIcon className="h-4 w-4" />
+      </Button>
+    );
+  }
+
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  const isDark = currentTheme === "dark";
+
+  const toggleTheme = () => {
+    setTheme(isDark ? "light" : "dark");
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="hover:bg-accent hover:text-accent-foreground h-9 w-9"
+      onClick={toggleTheme}
+      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+    >
+      {isDark ? (
+        <SunIcon className="h-4 w-4" />
+      ) : (
+        <MoonIcon className="h-4 w-4" />
+      )}
+    </Button>
+  );
+};
+
 // Types
 export interface NavbarNavLink {
   href: string;
@@ -154,6 +267,7 @@ const defaultNavigationLinks: NavbarNavLink[] = [
   { href: "/companies", label: "Companies" },
   { href: "/scpis", label: "SCPIs" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
@@ -177,6 +291,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
   ) => {
     const [isMobile, setIsMobile] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const containerRef = useRef<HTMLElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
@@ -189,6 +304,11 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       }
       return pathname.startsWith(link.href);
     };
+
+    // Close mobile menu when pathname changes (user navigates)
+    useEffect(() => {
+      setIsMobileMenuOpen(false);
+    }, [pathname]);
 
     useEffect(() => {
       const checkWidth = () => {
@@ -233,6 +353,10 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       setSearchQuery("");
     };
 
+    const handleMobileMenuLinkClick = () => {
+      setIsMobileMenuOpen(false);
+    };
+
     // Combine refs
     const combinedRef = React.useCallback(
       (node: HTMLElement | null) => {
@@ -260,7 +384,10 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
           <div className="flex items-center gap-2">
             {/* Mobile menu trigger */}
             {isMobile && (
-              <Popover>
+              <Popover
+                open={isMobileMenuOpen}
+                onOpenChange={setIsMobileMenuOpen}
+              >
                 <PopoverTrigger asChild>
                   <Button
                     className="group hover:bg-accent hover:text-accent-foreground h-9 w-9"
@@ -285,30 +412,46 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                                   ? "bg-accent text-accent-foreground"
                                   : "text-foreground/80",
                               )}
+                              onClick={handleMobileMenuLinkClick}
                             >
                               {link.label}
                             </Link>
                           </NavigationMenuItem>
                         );
                       })}
-                      <NavigationMenuItem>
-                        <Link href={signInHref}>
+                      <NavigationMenuItem className="w-full">
+                        <div className="flex w-full items-center justify-between px-3 py-2">
+                          <span className="text-foreground/80 text-sm font-medium">
+                            Theme
+                          </span>
+                          <ThemeToggle />
+                        </div>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem className="mt-1 w-full border-t pt-2">
+                        <Link
+                          href={signInHref}
+                          className="w-full"
+                          onClick={handleMobileMenuLinkClick}
+                        >
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="hover:bg-accent hover:text-accent-foreground text-sm font-medium"
+                            className="hover:bg-accent hover:text-accent-foreground w-full justify-start text-sm font-medium"
                             onClick={onSignInClick}
                           >
                             {signInText}
                           </Button>
                         </Link>
                       </NavigationMenuItem>
-                      <NavigationMenuItem>
-                        <Link href={ctaHref}>
+                      <NavigationMenuItem className="w-full">
+                        <Link
+                          href={ctaHref}
+                          className="w-full"
+                          onClick={handleMobileMenuLinkClick}
+                        >
                           <Button
-                            variant="ghost"
                             size="sm"
-                            className="hover:bg-accent hover:text-accent-foreground text-sm font-medium"
+                            className="hover:bg-accent hover:text-accent-foreground w-full justify-start text-sm font-medium"
                             onClick={onCtaClick}
                           >
                             {ctaText}
@@ -326,7 +469,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 href={logoHref}
                 className={cn(
                   "text-primary hover:text-primary/90 flex items-center space-x-2 transition-colors",
-                  (isMobile || isSearchOpen) && "hidden",
+                  isMobile && isSearchOpen && "hidden",
                 )}
               >
                 <div className="text-2xl">{logo}</div>
@@ -418,8 +561,8 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
               </div>
             )}
 
-            {/* Auth Buttons - Hidden when search is open on mobile */}
-            {!isMobile && !isSearchOpen && (
+            {/* Desktop: Show Auth Buttons + Theme Toggle */}
+            {!isMobile && (
               <>
                 <Link href={signInHref}>
                   <Button
@@ -440,8 +583,12 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                     {ctaText}
                   </Button>
                 </Link>
+                <ThemeToggle />
               </>
             )}
+
+            {/* Mobile: Only show Theme Toggle when search is not open */}
+            {isMobile && !isSearchOpen && <ThemeToggle />}
           </div>
         </div>
       </header>
@@ -451,4 +598,12 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 
 Navbar.displayName = "Navbar";
 
-export { Logo, HamburgerIcon, SearchIcon, XIcon };
+export {
+  Logo,
+  HamburgerIcon,
+  SearchIcon,
+  XIcon,
+  SunIcon,
+  MoonIcon,
+  SystemIcon,
+};

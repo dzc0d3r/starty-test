@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { CompanyResponse } from "schemas";
+import { CompanyResponse, CompanyResponseWithScpis } from "schemas";
 import { api } from "../axios.js";
 
 export const companyKeys = {
@@ -7,14 +7,15 @@ export const companyKeys = {
   detail: (id: string) => [...companyKeys.all, id] as const,
 };
 
-export const getCompanies = async (): Promise<CompanyResponse[]> => {
+export const getCompanies = async (): Promise<CompanyResponseWithScpis[]> => {
   const { data } = await api.get("/companies");
   return data;
 };
 
-export const getCompanyById = async (id: string): Promise<CompanyResponse> => {
+export const getCompanyById = async (
+  id: string,
+): Promise<CompanyResponseWithScpis> => {
   const { data } = await api.get(`/companies/${id}`);
-  console.log(`/companies/${id}`);
   return data;
 };
 

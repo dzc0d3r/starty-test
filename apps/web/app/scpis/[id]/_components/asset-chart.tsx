@@ -28,6 +28,7 @@ export const AssetChart = () => {
             dataKey="value"
             nameKey="name"
             label={(entry) =>
+              // @ts-ignore
               `${entry.name} (${((entry.value / 1000) * 100).toFixed(0)}%)`
             }
           >

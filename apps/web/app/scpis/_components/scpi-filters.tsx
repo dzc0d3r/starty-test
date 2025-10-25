@@ -96,6 +96,7 @@ export const ScpiFilters = ({
             step={0.5}
             value={[filters.minRate]}
             onValueChange={(value) =>
+              // @ts-ignore
               onFilterChange({ ...filters, minRate: value[0] })
             }
           />
@@ -118,6 +119,7 @@ export const ScpiFilters = ({
             step={100}
             value={[filters.maxPartPrice]}
             onValueChange={(value) =>
+              // @ts-ignore
               onFilterChange({ ...filters, maxPartPrice: value[0] })
             }
           />
@@ -139,6 +141,7 @@ export const ScpiFilters = ({
             step={500}
             value={[filters.maxInvestment]}
             onValueChange={(value) =>
+              // @ts-ignore
               onFilterChange({ ...filters, maxInvestment: value[0] })
             }
           />

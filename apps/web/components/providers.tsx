@@ -16,7 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <ApiProvider baseUrl={apiUrl}>
       <NextThemesProvider
         attribute="class"
-        defaultTheme="system"
+        defaultTheme="dark"
         enableSystem
         disableTransitionOnChange
         enableColorScheme

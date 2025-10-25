@@ -64,7 +64,7 @@ export const ScpiFilterableList = () => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-        <Skeleton className="h-96 w-full lg:col-span-1" />
+        <Skeleton className="h-screen w-full lg:col-span-1" />
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-3 xl:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={i} className="h-96 w-full" />

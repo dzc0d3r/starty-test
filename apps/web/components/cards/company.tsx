@@ -3,24 +3,24 @@ import { ArrowRight, Building2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
-import { CompanyWithBlur } from "../_components/company-slider-server";
+import { CompanyResponseWithScpis } from "schemas";
 
 interface CompanyCardProps {
-  company: CompanyWithBlur;
+  company: CompanyResponseWithScpis;
 }
 
 export const CompanyCard = ({ company }: CompanyCardProps) => {
   return (
     <Link href={`/companies/${company.id}`} className="group block h-full">
       <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
-        <div className="bg-muted/30 relative">
+        <div className="bg-muted/40 relative mt-[-30] h-50 w-full rounded-b-lg">
           {company.logoUrl ? (
             <Image
-              width={150}
-              height={250}
               src={company.logoUrl}
               alt={`${company.name} logo`}
-              className="mt-[-28] h-44 w-full rounded-b-xl object-fill"
+              width={100}
+              height={50}
+              className="h-full w-full rounded-b-lg object-fill"
             />
           ) : (
             <div className="flex h-full items-center justify-center">
