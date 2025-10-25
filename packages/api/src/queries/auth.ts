@@ -4,6 +4,7 @@ import { api } from "../axios.js";
 
 export const authKeys = {
   me: ["auth", "me"] as const,
+  adminMe: ["auth", "admin", "me"] as const,
 };
 
 const getMe = async (): Promise<UserResponse> => {
@@ -11,10 +12,24 @@ const getMe = async (): Promise<UserResponse> => {
   return data;
 };
 
+const getAdminMe = async (): Promise<UserResponse> => {
+  const { data } = await api.get<UserResponse>("/admin/me");
+  return data;
+};
+
 export const useGetMeQuery = () => {
   return useQuery({
     queryKey: authKeys.me,
     queryFn: getMe,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+};
+
+export const useAdminGetMeQuery = () => {
+  return useQuery({
+    queryKey: authKeys.adminMe,
+    queryFn: getAdminMe,
     refetchOnWindowFocus: false,
     retry: false,
   });

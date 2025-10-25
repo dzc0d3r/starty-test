@@ -106,10 +106,9 @@ class ApiService {
   }
 
   private setupInterceptors() {
-    // --- REQUEST INTERCEPTOR ---
+    // --- REQUEST INTERCEPTOR (Correct) ---
     this.api.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        // Only try to get token if we're in a browser environment
         if (typeof window !== "undefined") {
           const token = getToken();
           if (token) {
@@ -124,7 +123,7 @@ class ApiService {
       },
     );
 
-    // --- RESPONSE INTERCEPTOR ---
+    // --- RESPONSE INTERCEPTOR (With the Fix) ---
     this.api.interceptors.response.use(
       (response) => response,
       async (error: AxiosError) => {
@@ -132,57 +131,63 @@ class ApiService {
           _retry?: boolean;
         };
 
-        // Only handle 401 errors for token refresh
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          if (this.isRefreshing) {
-            return new Promise((resolve, reject) => {
-              this.failedQueue.push({ resolve, reject });
-            }).then((token) => {
-              if (originalRequest.headers) {
-                originalRequest.headers["Authorization"] = `Bearer ${token}`;
+        // --- THIS IS THE CRITICAL FIX ---
+        // We only attempt a refresh if the original request failed with 401
+        // AND it was sent WITH an Authorization header. If there was no header,
+        // it means the user was simply not logged in, and we should not try to refresh.
+        if (
+          error.response?.status === 401 &&
+          originalRequest.headers["Authorization"]
+        ) {
+          if (!originalRequest._retry) {
+            if (this.isRefreshing) {
+              return new Promise((resolve, reject) => {
+                this.failedQueue.push({ resolve, reject });
+              }).then((token) => {
+                if (originalRequest.headers) {
+                  originalRequest.headers["Authorization"] = `Bearer ${token}`;
+                }
+                return this.api(originalRequest);
+              });
+            }
+
+            originalRequest._retry = true;
+            this.isRefreshing = true;
+
+            try {
+              const { data } = await this.api.post<{ accessToken: string }>(
+                "/auth/refresh",
+              );
+              const newAccessToken = data.accessToken;
+
+              if (typeof window !== "undefined") {
+                setToken(newAccessToken);
               }
+
+              if (originalRequest.headers) {
+                originalRequest.headers["Authorization"] =
+                  `Bearer ${newAccessToken}`;
+              }
+              this.processQueue(null, newAccessToken);
               return this.api(originalRequest);
-            });
-          }
-
-          originalRequest._retry = true;
-          this.isRefreshing = true;
-
-          try {
-            const { data } = await this.api.post<{ accessToken: string }>(
-              "/auth/refresh",
-            );
-            const newAccessToken = data.accessToken;
-
-            // Only set token if we're in a browser environment
-            if (typeof window !== "undefined") {
-              setToken(newAccessToken);
+            } catch (refreshError) {
+              if (typeof window !== "undefined") {
+                setToken(null);
+              }
+              this.processQueue(refreshError as AxiosError, null);
+              console.error("Session has expired. Please log in again.");
+              return Promise.reject(refreshError);
+            } finally {
+              this.isRefreshing = false;
             }
-
-            if (originalRequest.headers) {
-              originalRequest.headers["Authorization"] =
-                `Bearer ${newAccessToken}`;
-            }
-            this.processQueue(null, newAccessToken);
-            return this.api(originalRequest);
-          } catch (refreshError) {
-            // Only clear token if we're in a browser environment
-            if (typeof window !== "undefined") {
-              setToken(null);
-            }
-            this.processQueue(refreshError as AxiosError, null);
-            console.error("Session has expired. Please log in again.");
-            return Promise.reject(refreshError);
-          } finally {
-            this.isRefreshing = false;
           }
         }
 
+        // For all other errors, or for 401s without an initial token, reject immediately.
         return Promise.reject(error);
       },
     );
   }
-
   // Public method to reinitialize with a different base URL (useful for testing)
   public reinitialize(baseURL: string) {
     this.initialized = false;

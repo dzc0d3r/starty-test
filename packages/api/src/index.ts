@@ -1,8 +1,11 @@
 export { ApiProvider } from "./provider.js";
 
-export { useGetMeQuery } from "./queries/auth.js";
-export { useLoginMutation, useLogoutMutation } from "./mutations/auth.js";
-
+export { useGetMeQuery, useAdminGetMeQuery } from "./queries/auth.js";
+export {
+  useLoginMutation,
+  useLogoutMutation,
+  useAdminLoginMutation,
+} from "./mutations/auth.js";
 export {
   useGetScpis,
   useGetScpiById,

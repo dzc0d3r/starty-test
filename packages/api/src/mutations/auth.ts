@@ -32,7 +32,21 @@ export const useLogoutMutation = () => {
     mutationFn: logout,
     onSuccess: () => {
       setToken(null);
-      queryClient.setQueryData(authKeys.me, null);
+      queryClient.removeQueries({ queryKey: authKeys.adminMe });
+      queryClient.removeQueries({ queryKey: authKeys.me });
+      queryClient.invalidateQueries();
+    },
+  });
+};
+
+export const useAdminLoginMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: login,
+    onSuccess: (data: LoginResponse) => {
+      setToken(data.accessToken);
+      queryClient.invalidateQueries({ queryKey: authKeys.adminMe });
     },
   });
 };
