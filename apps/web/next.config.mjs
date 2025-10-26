@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
-
+const isVercel = process.env.VERCEL === '1';
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
-  output: "standalone",
+  output: isVercel ? undefined : 'standalone',
   images: {
     remotePatterns: [
       {
