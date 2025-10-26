@@ -1,11 +1,5 @@
 import { Button } from "@workspace/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
@@ -50,7 +44,7 @@ export const LoginPage = () => {
     }
   };
 
-  const { isSuccess, isPending, isError, error } = loginMutation;
+  const { isSuccess, isPending, isError } = loginMutation;
 
   return (
     <div className="flex min-h-screen">

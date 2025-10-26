@@ -155,7 +155,7 @@ export const AnalyticsPage = () => {
                   dataKey="value"
                   nameKey="name"
                 >
-                  {scpisByTypeData.map((entry, index) => (
+                  {scpisByTypeData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={PIE_COLORS[index % PIE_COLORS.length]}

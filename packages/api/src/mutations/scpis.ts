@@ -24,8 +24,20 @@ export const useCreateScpi = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createScpi,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: scpiKeys.all });
+    onSuccess: (data) => {
+      // Update the cache directly and sort by date (newest first)
+      queryClient.setQueryData(
+        scpiKeys.all,
+        (old: SCPIResponse[] | undefined) => {
+          if (!old) return [data];
+
+          return [data, ...old].sort((a, b) => {
+            const dateA = new Date(a.updatedAt || a.createdAt || 0);
+            const dateB = new Date(b.updatedAt || b.createdAt || 0);
+            return dateB.getTime() - dateA.getTime();
+          });
+        },
+      );
     },
   });
 };
@@ -35,8 +47,24 @@ export const useUpdateScpi = () => {
   return useMutation({
     mutationFn: updateScpi,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: scpiKeys.all });
-      queryClient.invalidateQueries({ queryKey: scpiKeys.detail(data.id) });
+      // Update the cache directly and sort by date (newest first)
+      queryClient.setQueryData(
+        scpiKeys.all,
+        (old: SCPIResponse[] | undefined) => {
+          if (!old) return [data];
+
+          // Remove the old version and add the updated one, then sort
+          const filtered = old.filter((scpi) => scpi.id !== data.id);
+          return [data, ...filtered].sort((a, b) => {
+            const dateA = new Date(a.updatedAt || a.createdAt || 0);
+            const dateB = new Date(b.updatedAt || b.createdAt || 0);
+            return dateB.getTime() - dateA.getTime();
+          });
+        },
+      );
+
+      // Also update the individual SCPI query
+      queryClient.setQueryData(scpiKeys.detail(data.id), data);
     },
   });
 };
@@ -45,8 +73,15 @@ export const useDeleteScpi = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteScpi,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: scpiKeys.all });
+    onSuccess: (_, id) => {
+      // Remove the deleted SCPI from cache
+      queryClient.setQueryData(
+        scpiKeys.all,
+        (old: SCPIResponse[] | undefined) => {
+          if (!old) return [];
+          return old.filter((scpi) => scpi.id !== id);
+        },
+      );
     },
   });
 };
