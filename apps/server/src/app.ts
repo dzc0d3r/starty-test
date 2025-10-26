@@ -9,23 +9,12 @@ import { errorHandler } from "./middleware/errorHandler.js";
 
 const app: Express = express();
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "http://localhost:5173",
-  "http://localhost:8080",
-  "http://localhost:8081",
-];
+// just bcoz of no time for twae this for deployment
 const corsOptions: CorsOptions = {
-  origin: (origin: string | undefined, callback) => {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: true, // <-- echo request Origin, allowing all origins
   credentials: true,
 };
+
 app.use(cors(corsOptions));
 app.use(helmet());
 app.use(express.json());
