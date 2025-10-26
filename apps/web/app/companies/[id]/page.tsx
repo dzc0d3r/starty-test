@@ -63,7 +63,7 @@ async function CompanyContent({ id }: { id: string }) {
     ];
 
     return (
-      <main className="container mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <main className="container mx-auto max-w-screen px-4 py-12 sm:py-16">
         {/* Header Section */}
         <header className="mb-16 grid grid-cols-1 items-center gap-8 md:grid-cols-3 md:gap-12">
           <div className="bg-muted/30 relative flex h-40 w-full items-center justify-center rounded-lg md:h-full">

@@ -131,10 +131,6 @@ class ApiService {
           _retry?: boolean;
         };
 
-        // --- THIS IS THE CRITICAL FIX ---
-        // We only attempt a refresh if the original request failed with 401
-        // AND it was sent WITH an Authorization header. If there was no header,
-        // it means the user was simply not logged in, and we should not try to refresh.
         if (
           error.response?.status === 401 &&
           originalRequest.headers["Authorization"]

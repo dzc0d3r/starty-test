@@ -93,7 +93,7 @@ async function ScpiContent({ id }: { id: string }) {
 
     return (
       <>
-        <main className="container mx-auto max-w-5xl px-4 py-12 sm:py-16">
+        <main className="container mx-auto max-w-screen px-4 py-12 sm:py-16">
           {/* Section 1: Page Header */}
           <header className="mb-12">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -143,8 +143,8 @@ async function ScpiContent({ id }: { id: string }) {
           </section>
 
           {/* Section 3: The Portfolio Overview */}
-          <section className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-3">
-            <div className="lg:col-span-2">
+          <section className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-5">
+            <div className="lg:col-span-3">
               <h3 className="mb-4 text-2xl font-bold">Investment Strategy</h3>
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 <p>
@@ -172,7 +172,7 @@ async function ScpiContent({ id }: { id: string }) {
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-2">
               <h3 className="mb-4 text-2xl font-bold">Asset Allocation</h3>
               <Card>
                 <CardContent className="pt-6">

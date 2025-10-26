@@ -5,7 +5,7 @@ import { getAllScpisHandler } from "../../controllers/scpi.controller.js";
 import { requireAdmin } from "../../middleware/requireAdmin.js";
 import { requireAuth } from "../../middleware/requireAuth.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.use(requireAuth, requireAdmin);
 
