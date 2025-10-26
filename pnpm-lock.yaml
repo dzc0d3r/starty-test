@@ -175,7 +175,7 @@ importers:
         specifier: ^13.1.2
         version: 13.1.2
       schemas:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/schemas
       swagger-ui-express:
         specifier: ^5.0.1
