@@ -34,7 +34,7 @@ Compose**, and managed as a cohesive monorepo with **Turborepo**.
 - **Hybrid Authentication:** Secure, stateful refresh tokens via `httpOnly`
   cookies combined with stateless JWT access tokens.
 - **Role-Based Access Control (RBAC):** Dedicated, secure `/admin` namespace on
-  the backend, enforced by middleware.
+  the backend, enforced by middleware. (requireAuth and requireAdmin)
 - **Server-Side Rendering (SSR):** The public `web` app is built with Next.js
   for optimal performance and SEO.
 - **Declarative UI & State Management:** Frontends are built with React and
@@ -99,9 +99,6 @@ Compose**, and managed as a cohesive monorepo with **Turborepo**.
     cp .env.example .env
     ```
 
-    _Note: It is highly recommended to generate new, strong secrets for the
-    `JWT_\*` variables.\_
-
 3.  **Install all dependencies:** This command will read the
     `pnpm-workspace.yaml` file and install dependencies for all apps and
     packages in the monorepo.
@@ -113,9 +110,33 @@ Compose**, and managed as a cohesive monorepo with **Turborepo**.
 
 This is the simplest way to run the entire application ecosystem.
 
-1.  **Start the Database Service:** Open a terminal and run the following
-    command. It will start the PostgreSQL container and wait until it is healthy
-    and ready to accept connections.
+1. **Using docker compose**
+
+   ```bash
+      docker-compose up
+   ```
+
+   Open another another terminal and run these commands to create the database
+   schema and populate it with initial data.
+
+   ```bash
+
+      # Create the tables
+   pnpm --filter db db:migrate
+
+      # Populate with fake data
+      pnpm --filter db db:seed
+   ```
+
+   - Visit http://localhost for the client facing app
+   - Visit http://localhost:81 for the admin panel
+   - Visit http://localhost:3000/docs for api docs (swagger ui)
+
+2. **Manualy start apps, either all at once or one by one**
+
+2.1 **Start the Database Service:** Open a terminal and run the following
+command. It will start the PostgreSQL container and wait until it is healthy and
+ready to accept connections.
 
     ```bash
     pnpm --filter db db:up
@@ -123,9 +144,8 @@ This is the simplest way to run the entire application ecosystem.
 
     _Leave this terminal running._
 
-2.  **Apply Migrations and Seed the Database:** Open a **second terminal**. Run
-    these commands to create the database schema and populate it with initial
-    data.
+2.2 **Apply Migrations and Seed the Database:** Open a **second terminal**. Run
+these commands to create the database schema and populate it with initial data.
 
     ```bash
     # Create the tables
@@ -135,16 +155,13 @@ This is the simplest way to run the entire application ecosystem.
     pnpm --filter db db:seed
     ```
 
-3.  **Start All Development Servers with Turborepo:** This is the main command.
-    It will build all necessary dependencies and start the development servers
-    for `server`, `web`, and `admin` in parallel.
-    ```bash
-    turbo dev
-    ```
+2.3 **Start All Development Servers with Turborepo:** This is the main command.
+It will build all necessary dependencies and start the development servers for
+`server`, `web`, and `admin` in parallel. `bash     turbo dev     `
 
 ### 🚀 Accessing the Applications
 
-Once `pnpm dev` is running, the applications will be available at:
+Once `turbo dev` is running, the applications will be available at:
 
 - 🌐 **Public Website (`web`):** [http://localhost:3001](http://localhost:3001)
 - 🔐 **Admin Panel (`admin`):** [http://localhost:5173](http://localhost:5173)
@@ -165,14 +182,15 @@ _Make sure the database is running (`pnpm --filter db db:up`) before starting
 the server._
 
 ```bash
+
 # Start only the backend API server
-pnpm dev --filter server
+turbo dev --filter server
 
 # Start only the public Next.js website
-pnpm dev --filter web
+turbo dev --filter web
 
 # Start only the Vite-based admin panel
-pnpm dev --filter admin
+turbo dev --filter admin
 ```
 
 Alternative: Using Docker Compose Directly
