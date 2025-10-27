@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
-const isVercel = process.env.VERCEL === '1';
-const baseConfig = {
+const isVercel = process.env.VERCEL === "1";
+const nextConfig = {
   transpilePackages: ["@workspace/ui"],
+  output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -20,10 +21,4 @@ const baseConfig = {
     ],
   },
 };
-let nextConfig = {}
-if (isVercel) {
-   nextConfig = {...baseConfig}
-} else {
-   nextConfig = {...baseConfig, output: 'standalone',}
-}
 export default nextConfig;
