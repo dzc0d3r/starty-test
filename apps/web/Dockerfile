@@ -39,6 +39,7 @@ USER nextjs
 # Automatically leverage output traces to reduce image size
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+# builder pruned out/full (turbo prune)
+COPY --from=builder   --chown=nextjs:nodejs /app/out/full/apps/web/public ./apps/web/public
 
 CMD ["node", "apps/web/server.js"]
