@@ -34,7 +34,7 @@ RUN pnpm turbo build
 FROM nginx:alpine AS runner
 WORKDIR /app
 
-COPY --from=builder  /app/apps/admin/dist /usr/share/nginx/html
+COPY --from=installer  /app/apps/admin/dist /usr/share/nginx/html
 # Expose port 80 to the outside world
 EXPOSE 80
 
